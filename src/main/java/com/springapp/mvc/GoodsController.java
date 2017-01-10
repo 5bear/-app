@@ -43,11 +43,11 @@ public class GoodsController extends BaseController {
             returnCode.setFail("产品类型名称不能为空");
             return JSON.toJSONString(returnCode);
         }
-        Long time = System.currentTimeMillis();
         ArrayList<String> gCodes = new ArrayList<String>();
         ArrayList<String> lCodes = new ArrayList<String>();
         Integer count = pallets;
         while (count>0){
+            Long time = System.currentTimeMillis();
             Goods goods = new Goods();
             String gCode = generateGcode(gType);
             String salt = time.toString();
@@ -60,7 +60,6 @@ public class GoodsController extends BaseController {
             goods.setgType(gType);
             goods.setgTypeInfo(gTypeInfo);
             baseDao.save(goods);
-            time++;
             count--;
         }
         //获得要打包的文件夹路径
@@ -319,18 +318,15 @@ public class GoodsController extends BaseController {
     }
 
     public static void main(String[] args){
-        Integer a[] = {1,2,3,4,5,6,7,9,1,2};
-        Long time = System.currentTimeMillis();
-        int tmp = (int) (time%100000000);
-        int pos ;
-        StringBuilder str = new StringBuilder();
-        while(tmp>0){
-            pos = tmp % 10;
-            str.append(a[pos]);
-            tmp /= 10;
+        StringBuilder str=new StringBuilder();//定义变长字符串
+        Random random=new Random();
+//随机生成数字，并添加到字符串
+        for(int i=0;i<8;i++){
+            str.append(random.nextInt(10));
         }
+//将字符串转换为数字并输出
         int num=Integer.parseInt(str.toString());
-        System.out.print(num);
+        System.out.println(num);
     }
 
 }
