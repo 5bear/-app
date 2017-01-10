@@ -50,6 +50,13 @@ public class GoodsController extends BaseController {
             Long time = System.currentTimeMillis();
             Goods goods = new Goods();
             String gCode = generateGcode(gType);
+            Goods tmp = goodsDao.isIn(gCode);
+            while (tmp!=null){
+                System.out.print("重复");
+                time++;
+                gCode = generateGcode(gType);
+                tmp = goodsDao.isIn(gCode);
+            }
             String salt = time.toString();
             String lCode = MD5.MD5Encode(gCode + salt);
             gCodes.add(gCode);
@@ -297,10 +304,10 @@ public class GoodsController extends BaseController {
         }
         bufferWritter.close();*/
         String content = "内码\t箱码\t文件名\r\n";
-        int i = 0;
+        int i = realCount-1;
         while (!stack.isEmpty()){
             content += gCode.get(i) + "\t" + lCode.get(i) + "\t" + stack.pop() + "\r\n";
-            i++;
+            i--;
         }
         FileOutputStream o=null;
         try {
