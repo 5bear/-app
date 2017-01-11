@@ -53,7 +53,6 @@ public class GoodsController extends BaseController {
             Goods tmp = goodsDao.isIn(gCode);
             while (tmp!=null){
                 System.out.print("重复");
-                time++;
                 gCode = generateGcode(gType);
                 tmp = goodsDao.isIn(gCode);
             }
@@ -189,17 +188,38 @@ public class GoodsController extends BaseController {
         return (JSON)JSON.toJSON(returnCode);
     }
     public String generateGcode(String gType){
-        Integer a[] = {1,2,3,4,5,6,7,9,1,2};
-        Long time = System.currentTimeMillis();
-        int tmp = (int) (time%100000000);
-        int pos ;
-        StringBuilder str = new StringBuilder();
-        while(tmp>0){
-            pos = tmp % 10;
-            str.append(a[pos]);
-            tmp /= 10;
+        /*Integer a[] = {1,2,3,4,5,6,7,9,1,2};*/
+        StringBuilder str=new StringBuilder();//定义变长字符串
+        Random random=new Random();
+//随机生成数字，并添加到字符串
+        for(int i=0;i<8;i++){
+            int x = random.nextInt(10);
+            if(x==0)
+                x = 2;
+            if(x==8)
+                x = 6;
+            str.append(x);
         }
         int num=Integer.parseInt(str.toString());
+//将字符串转换为数字并输出
+        /*int num=Integer.parseInt(str.toString());
+        System.out.println(num);
+        int step = (num%10);
+        int i=0;
+        while((i+step)<10){
+            int t = a[i];
+            a[i] = a[i+step];
+            a[i+step] = t;
+            i++;
+        }
+        int pos ;
+        str = new StringBuilder();
+        while(num>0){
+            pos = num % 10;
+            str.append(a[pos]);
+            num /= 10;
+        }
+        int randomNum=Integer.parseInt(str.toString());*/
         return gType + num;
         /*StringBuilder str=new StringBuilder();//定义变长字符串
         Random random=new Random();

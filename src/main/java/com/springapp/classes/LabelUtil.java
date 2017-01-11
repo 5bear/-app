@@ -40,7 +40,7 @@ public class LabelUtil {
 
     private static int interval = 0;
 
-    private static int size = 80;//windows  70
+    private static int size = 70;//windows  70
     // 水印文字字体
     private static Font font = new Font("微软雅黑", Font.BOLD, size);
     // 水印文字颜色
@@ -50,6 +50,8 @@ public class LabelUtil {
     public static void setColor(Integer rgb){
         color = new Color(rgb, rgb, rgb);
     }
+
+
 
     /**
      *
@@ -422,6 +424,9 @@ OutputStream os = new FileOutputStream("d://test);
         BufferedImage bufferedImage = new BufferedImage( imgWidth, imgHeight, BufferedImage.TYPE_INT_RGB);
         try {
             while (from <= count) {
+/*
+                font = new Font("微软雅黑", Font.BOLD, from*5);
+*/
                 Graphics2D g2 = bufferedImage.createGraphics();
                 g2.setBackground(Color.WHITE);
                 g2.clearRect(0, 0, imgWidth, imgHeight);
@@ -447,19 +452,119 @@ OutputStream os = new FileOutputStream("d://test);
                      */
                      /*
                     windows
-                     for (int y = 10; y < bufferedImage
-                            .getHeight()*2 + logoHeight; y = y +interval+ logoHeight - 12) {
-                        g2.drawString(gCode, -10, y - logoHeight);//水印位置
+                    for (int y = logoHeight/4*3; y < bufferedImage
+                            .getHeight()*2 + logoHeight; y = y + (height-5*logoHeight)/4 + 3) {
+                        g2.drawString(gCode, (imgWidth-logoWidth)/3*2, y );//水印位置
                      */
-                    for (int y = 0; y < bufferedImage
-                            .getHeight()*2 + logoHeight; y = y + interval+ logoHeight - 12) {
-                        g2.drawString(gCode.get(from-1), (imgWidth-logoWidth)/3*2, y + logoHeight/2 + 8);//水印位置
+                     /*
+                     linux 1.10 version
+                      */
+                    for (int y = logoHeight/4*3; y < bufferedImage
+                            .getHeight()*2 + logoHeight; y = y + (height-5*logoHeight)/5*4) {
+                        g2.drawString(gCode.get(from-1), (imgWidth-logoWidth)/3*2, y );//水印位置
                         /*for (int x = interval; x < bufferedImage
                                 .getWidth()*2 + logoWidth; x = x +interval+ logoWidth) {
                             g2.drawString(gCode, x - logoWidth, y - logoHeight);
                         }*/
                     }
                     g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER));
+                }
+                String targetPath = targetParentPath + "/" + fileName;
+                os = new FileOutputStream(targetPath);
+                ImageIO.write(bufferedImage, "png", os);
+                stack.push(fileName);
+                from++;
+            }
+            return stack;
+        }catch (Exception e){
+            System.out.print(e.getMessage());
+            return null;
+        }
+    }
+    public static Stack<String> createEmptyPicture3(String gCode, String targetParentPath,Integer width, Integer height,Integer from, Integer count) throws IOException {
+        Stack<String> stack = new Stack<String>();
+        OutputStream os = null;
+        Integer imgWidth = width>height?width:height;
+        Integer imgHeight = width>height?height:width;
+        BufferedImage bufferedImage = new BufferedImage( imgWidth, imgHeight, BufferedImage.TYPE_INT_RGB);
+        try {
+            while (from <= count) {
+                Graphics2D g2 = bufferedImage.createGraphics();
+                g2.setBackground(Color.WHITE);
+                g2.clearRect(0, 0, imgWidth, imgHeight);
+                /*// 4、设置水印旋转
+                g2.rotate(Math.toRadians(degree),
+                        (double) width / 2,
+                        (double) height / 2);*/
+                String fileName = from + ".png";
+                if(gCode!=null){
+                    fileName = from + ".png";
+                    // 5、设置水印文字颜色
+                    g2.setColor(color);
+                    // 6、设置水印文字Font
+                    g2.setFont(font);
+                    // 7、设置水印文字透明度
+                    g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_ATOP,
+                            1.0f));
+                    FontMetrics fm = sun.font.FontDesignMetrics.getMetrics(font);
+                    Integer logoWidth = fm.stringWidth(gCode);
+                    Integer logoHeight = fm.getHeight();
+                    // 8、第一参数->设置的内容，后面两个参数->文字在图片上的坐标位置(x,y)
+                    /*
+                    linux系统
+                    for (int y = 10; y < bufferedImage
+                            .getHeight()*2 + logoHeight; y = y +interval+ logoHeight) {
+                        g2.drawString(gCode, -10, y - logoHeight);//水印位置
+                     */
+                     /*
+                    windows
+                     for (int y = 10; y < bufferedImage
+                            .getHeight()*2 + logoHeight; y = y +interval+ logoHeight - 12) {
+                        g2.drawString(gCode, -10, y - logoHeight);//水印位置
+                     */
+                    for (int y = logoHeight/4*3; y < bufferedImage
+                            .getHeight()*2 + logoHeight; y = y + (height-5*logoHeight)/4 + 3) {
+                        g2.drawString(gCode, (imgWidth-logoWidth)/3*2, y );//水印位置
+                        /*for (int x = interval; x < bufferedImage
+                                .getWidth()*2 + logoWidth; x = x +interval+ logoWidth) {
+                            g2.drawString(gCode, x - logoWidth, y - logoHeight);
+                        }*/
+                    }
+                    g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER));
+                    /*
+                     BufferedImage bufferedImage = new BufferedImage(width , height, BufferedImage.TYPE_INT_RGB);
+                    FontFamily fontFamily = new FontFamily("宋体");
+GraphicsPath path=new GraphicsPath();
+//向区域中追加文本，字体大小为60
+path.AddString("文字特效",fontFamily,(int)FontStyle.Regular,
+60, new Point(0, 0),new StringFormat());
+
+//获取路径的点信息
+PointF[] dataPoints = path.PathPoints;
+//获取路径的点类型信息
+byte [] pTypes = path.PathTypes;
+
+//复制路径
+GraphicsPath path2=(GraphicsPath)path.Clone();
+
+//将文本在水平方向上缩小，在垂直方向上不变
+Matrix matrix = new Matrix(0.50f, 0.0f, 0.0f, 1f, 0.0f,0.0f);
+//对points数据中的每一个成员进行矩形运算
+matrix.TransformPoints(dataPoints);
+//根据计算后的点重新构造路径
+GraphicsPath newpath=new GraphicsPath(dataPoints,pTypes);
+//设置文本输出质量
+Graphics g = bufferedImage.createGraphics();
+g.TextRenderingHint=TextRenderingHint.ClearTypeGridFit;
+g.SmoothingMode=SmoothingMode.AntiAlias;
+SolidBrush redBrush = new SolidBrush(Color.Red);
+//填充路径
+g.FillPath(redBrush,newpath);
+g.Dispose();
+redBrush.Dispose();
+OutputStream os = new FileOutputStream("d://test);
+                ImageIO.write(bufferedImage, "png", os);
+                     */
                 }
                 String targetPath = targetParentPath + "/" + fileName;
                 os = new FileOutputStream(targetPath);
@@ -628,7 +733,7 @@ OutputStream os = new FileOutputStream("d://test);
         markImageByText("CH12121", file1, targetTextPath2, 1);
 */
         String path = "d:/label/CH1212114831424361.png";
-        createEmptyPicture("CHM121211", targetTextPath2, srcImg.getWidth(null), srcImg.getHeight(null), 1, 1);
+        createEmptyPicture3("CHM56222262", targetTextPath2, srcImg.getWidth(null), srcImg.getHeight(null), 1, 1);
         /*Stack<String> stack = createEmptyPicture("CH12121", targetTextPath2,srcImg.getWidth(null),srcImg.getHeight(null),1);
         while (!stack.empty()){
             String path = stack.pop();
