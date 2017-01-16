@@ -114,6 +114,25 @@
         <property name="sessionFactory" ref="sessionFactory"/>
     </bean>
 
+    <!-- 定时任务-->
+    <bean name="job1" class="org.springframework.scheduling.quartz.JobDetailBean">
+        <property name="jobClass" value="com.springapp.classes.myJob" />
+    </bean>
+    <!-- 作业触发器 -->
+    <bean id="cronTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
+        <property name="jobDetail" ref="job1" />
+        <!--每天12:00运行一次 -->
+        <property name="cronExpression" value="0 00 04 * * ?" />
+    </bean>
+
+    <!-- 调度工厂 -->
+    <bean class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+        <property name="triggers">
+            <list>
+                <ref bean="cronTrigger" />
+            </list>
+        </property>
+    </bean>
     <!-- 事务管理器，这里可以设置多个 -->
     <tx:annotation-driven transaction-manager="transactionManager"/>
 

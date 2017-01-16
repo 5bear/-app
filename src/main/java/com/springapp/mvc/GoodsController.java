@@ -300,7 +300,9 @@ public class GoodsController extends BaseController {
      */
     public String generateLabel2(HttpSession session, Integer rgb, ArrayList<String> gCode, ArrayList<String> lCode, Integer realCount) throws IOException {
         Long time = System.currentTimeMillis();
+/*
         String srcImgPath = session.getServletContext().getRealPath("/WEB-INF/pages/static/template5.PNG");
+*/
         String targetLabelPath = session.getServletContext().getRealPath("/WEB-INF/pages/labels/" + time);//新建一个文件夹存储标签
         File file = new File(targetLabelPath);
         if(!file.exists())
@@ -310,7 +312,7 @@ public class GoodsController extends BaseController {
         if(!file.exists())
             file.mkdirs();
         LabelUtil.setColor(rgb);
-        Stack<String> stack =  LabelUtil.generateLabel3(gCode, srcImgPath, targetLabelPath, realCount);
+        Stack<String> stack =  LabelUtil.generateLabel3(gCode, targetLabelPath, realCount);
         String fileName = System.currentTimeMillis()/1000 + ".txt";
         String targetTextPath = targetLabelPath + "/" +  fileName;//跟标签放在一起方便打包
         /*FileWriter fileWritter = new FileWriter(targetTextPath,false);

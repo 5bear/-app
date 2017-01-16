@@ -25,7 +25,11 @@ public class LabelUtil {
     private static Integer width = 144;
 
     private static Integer height = 144;
-
+    /*
+    要创建的图片长宽
+     */
+    private static Integer imgWidth = 400;
+    private static Integer imgHeight = 738;
     // 水印透明度
     private static float alpha = 0.5f;
 
@@ -42,7 +46,7 @@ public class LabelUtil {
 
     private static int size = 70;//windows  70
     // 水印文字字体
-    private static Font font = new Font("微软雅黑", Font.BOLD, size);
+    private static Font font = new Font("微软雅黑", Font.BOLD, size);//Vera Sans YuanTi
     // 水印文字颜色
     private static Color color = new Color(190,190,190);
 
@@ -300,17 +304,13 @@ public class LabelUtil {
     /**
      * 创建空白文件
      * @param targetParentPath
-     * @param width
-     * @param height
      * @param count
      * @return
      * @throws IOException
      */
-    public static Stack<String> createEmptyPicture(String gCode, String targetParentPath,Integer width, Integer height,Integer from, Integer count) throws IOException {
+    public static Stack<String> createEmptyPicture(String gCode, String targetParentPath,Integer from, Integer count) throws IOException {
         Stack<String> stack = new Stack<String>();
         OutputStream os = null;
-        Integer imgWidth = width>height?width:height;
-        Integer imgHeight = width>height?height:width;
         BufferedImage bufferedImage = new BufferedImage( imgWidth, imgHeight, BufferedImage.TYPE_INT_RGB);
         try {
             while (from <= count) {
@@ -409,18 +409,14 @@ OutputStream os = new FileOutputStream("d://test);
      * 1.10日修改 创建水印图片
      * @param gCode
      * @param targetParentPath
-     * @param width
-     * @param height
      * @param from
      * @param count
      * @return
      * @throws IOException
      */
-    public static Stack<String> createEmptyPicture1(ArrayList<String> gCode, String targetParentPath, Integer width, Integer height, Integer from, Integer count) throws IOException {
+    public static Stack<String> createEmptyPicture1(ArrayList<String> gCode, String targetParentPath, Integer from, Integer count) throws IOException {
         Stack<String> stack = new Stack<String>();
         OutputStream os = null;
-        Integer imgWidth = width>height?width:height; //图片宽度
-        Integer imgHeight = width>height?height:width; //图片高度
         BufferedImage bufferedImage = new BufferedImage( imgWidth, imgHeight, BufferedImage.TYPE_INT_RGB);
         try {
             while (from <= count) {
@@ -430,6 +426,10 @@ OutputStream os = new FileOutputStream("d://test);
                 Graphics2D g2 = bufferedImage.createGraphics();
                 g2.setBackground(Color.WHITE);
                 g2.clearRect(0, 0, imgWidth, imgHeight);
+                // 4、设置水印旋转
+                g2.rotate(Math.toRadians(degree),
+                        (double) width / 2,
+                        (double) height / 2);
                 String fileName = from + ".png";
                 if(gCode!=null){
                     fileName = from + ".png";
@@ -459,9 +459,17 @@ OutputStream os = new FileOutputStream("d://test);
                      /*
                      linux 1.10 version
                       */
-                    for (int y = logoHeight/4*3; y < bufferedImage
-                            .getHeight()*2 + logoHeight; y = y + (height-5*logoHeight)/5*4) {
+                   /* for (int y = logoHeight/4*3; y < bufferedImage
+                            .getHeight()*2 + logoHeight; y = y + (height-5*logoHeight)/5 + 5) {
                         g2.drawString(gCode.get(from-1), (imgWidth-logoWidth)/3*2, y );//水印位置
+                        *//*for (int x = interval; x < bufferedImage
+                                .getWidth()*2 + logoWidth; x = x +interval+ logoWidth) {
+                            g2.drawString(gCode, x - logoWidth, y - logoHeight);
+                        }*//*
+                    }*/
+                    for (int y = 0; y < bufferedImage
+                            .getHeight()*2 + logoHeight; y = y +interval+ logoHeight - 10) {
+                        g2.drawString(gCode.get(from-1), -logoWidth, y - logoHeight - 16);//水印位置
                         /*for (int x = interval; x < bufferedImage
                                 .getWidth()*2 + logoWidth; x = x +interval+ logoWidth) {
                             g2.drawString(gCode, x - logoWidth, y - logoHeight);
@@ -481,21 +489,19 @@ OutputStream os = new FileOutputStream("d://test);
             return null;
         }
     }
-    public static Stack<String> createEmptyPicture3(String gCode, String targetParentPath,Integer width, Integer height,Integer from, Integer count) throws IOException {
+    public static Stack<String> createEmptyPicture3(String gCode, String targetParentPath,Integer from, Integer count) throws IOException {
         Stack<String> stack = new Stack<String>();
         OutputStream os = null;
-        Integer imgWidth = width>height?width:height;
-        Integer imgHeight = width>height?height:width;
         BufferedImage bufferedImage = new BufferedImage( imgWidth, imgHeight, BufferedImage.TYPE_INT_RGB);
         try {
             while (from <= count) {
                 Graphics2D g2 = bufferedImage.createGraphics();
                 g2.setBackground(Color.WHITE);
                 g2.clearRect(0, 0, imgWidth, imgHeight);
-                /*// 4、设置水印旋转
+                // 4、设置水印旋转
                 g2.rotate(Math.toRadians(degree),
                         (double) width / 2,
-                        (double) height / 2);*/
+                        (double) height / 2);
                 String fileName = from + ".png";
                 if(gCode!=null){
                     fileName = from + ".png";
@@ -522,9 +528,11 @@ OutputStream os = new FileOutputStream("d://test);
                             .getHeight()*2 + logoHeight; y = y +interval+ logoHeight - 12) {
                         g2.drawString(gCode, -10, y - logoHeight);//水印位置
                      */
-                    for (int y = logoHeight/4*3; y < bufferedImage
-                            .getHeight()*2 + logoHeight; y = y + (height-5*logoHeight)/4 + 3) {
-                        g2.drawString(gCode, (imgWidth-logoWidth)/3*2, y );//水印位置
+
+
+                    for (int y = 0; y < bufferedImage
+                            .getHeight()*2 + logoHeight; y = y +interval+ logoHeight - 10) {
+                        g2.drawString(gCode, -logoWidth, y - logoHeight - 16 );//水印位置
                         /*for (int x = interval; x < bufferedImage
                                 .getWidth()*2 + logoWidth; x = x +interval+ logoWidth) {
                             g2.drawString(gCode, x - logoWidth, y - logoHeight);
@@ -604,11 +612,8 @@ OutputStream os = new FileOutputStream("d://test);
             ImageIO.write(buffImg, "PNG", os);
 /*
         String srcImgPath = "d:/template.png";
+                    Image srcImg = ImageIO.read(new File(srcImgPath));
 */
-
-            Image srcImg = ImageIO.read(new File(srcImgPath));
-            //给模板加上文字
-            // 给图片添加水印文字,水印文字旋转-45
             System.out.println("开始给图片添加水印文字...");
             Stack<String> labelStack = markImageByText(gCode, srcImgPath, targetParentPath, /*textParentPath, */realCount, 90, 0);
             System.out.println("给图片添加水印文字结束...");
@@ -623,7 +628,7 @@ OutputStream os = new FileOutputStream("d://test);
 
             map.put("label", labelStack);
             System.out.println("生成空白页...");
-            Stack<String> emptyStack = createEmptyPicture(null, targetParentPath,srcImg.getWidth(null),srcImg.getHeight(null), realCount, emptyCount);
+            Stack<String> emptyStack = createEmptyPicture(null, targetParentPath,realCount, emptyCount);
             map.put("empty", emptyStack);
             return map;
         }catch (Exception e){
@@ -655,13 +660,11 @@ OutputStream os = new FileOutputStream("d://test);
             ImageIO.write(buffImg, "PNG", os);
 /*
         String srcImgPath = "d:/template.png";
+                    Image srcImg = ImageIO.read(new File(srcImgPath));
 */
-            //导入模板文件
-            Image srcImg = ImageIO.read(new File(srcImgPath));
-            //给模板加上文字
             // 给图片添加水印文字,水印文字旋转-45
             System.out.println("开始创建带水印的图片...");
-            Stack<String> labelStack = createEmptyPicture(gCode,  targetParentPath,srcImg.getWidth(null),srcImg.getHeight(null), 1, realCount);
+            Stack<String> labelStack = createEmptyPicture(gCode,  targetParentPath, 1, realCount);
             System.out.println("创建完成...");
 
             System.out.println("开始给图片添加模板文字...");
@@ -683,7 +686,7 @@ OutputStream os = new FileOutputStream("d://test);
 
             map.put("label", labelStack);
             System.out.println("生成空白页...");
-            Stack<String> emptyStack = createEmptyPicture(null, targetParentPath,srcImg.getWidth(null),srcImg.getHeight(null), realCount + 1, emptyCount + realCount);
+            Stack<String> emptyStack = createEmptyPicture(null, targetParentPath, realCount + 1, emptyCount + realCount);
             map.put("empty", emptyStack);
             return map;
         }catch (Exception e){
@@ -696,23 +699,20 @@ OutputStream os = new FileOutputStream("d://test);
      * 1.9日修改
      *生成指定数量的标签和空白:先创建带水印的空白图片，然后给空白图片加上模板文字，最后再贴上二维码
      * @param gCode 串码
-     * @param srcImgPath 模板文件地址
      * @param targetParentPath 生成标签存储文件夹
      * @param realCount
      * @return
      * @throws IOException
      */
-    public static Stack<String> generateLabel3(ArrayList<String> gCode, String srcImgPath, String targetParentPath,/*String textParentPath, */Integer realCount) throws IOException {
+    public static Stack<String> generateLabel3(ArrayList<String> gCode,  String targetParentPath,/*String textParentPath, */Integer realCount) throws IOException {
         try {
             /*
         String srcImgPath = "d:/template.png";
+                    Image srcImg = ImageIO.read(new File(srcImgPath));
 */
-            //导入模板文件
-            Image srcImg = ImageIO.read(new File(srcImgPath));
-            //给模板加上文字
-            // 给图片添加水印文字,水印文字旋转-45
+            // 给图片添加水印文字
             System.out.println("开始创建带水印的图片...");
-            Stack<String> labelStack = createEmptyPicture1(gCode,  targetParentPath,srcImg.getWidth(null),srcImg.getHeight(null), 1, realCount);
+            Stack<String> labelStack = createEmptyPicture1(gCode,  targetParentPath,1, realCount);
             System.out.println("创建完成...");
             return labelStack;
         }catch (Exception e){
@@ -723,8 +723,6 @@ OutputStream os = new FileOutputStream("d://test);
 
 
     public static void main(String[] args) throws IOException {
-        String file2 = "d://template5.PNG";
-        Image srcImg = ImageIO.read(new File(file2));
 /*
         markImageByIcon(file2, file1,file1);
 */
@@ -733,7 +731,7 @@ OutputStream os = new FileOutputStream("d://test);
         markImageByText("CH12121", file1, targetTextPath2, 1);
 */
         String path = "d:/label/CH1212114831424361.png";
-        createEmptyPicture3("CHM56222262", targetTextPath2, srcImg.getWidth(null), srcImg.getHeight(null), 1, 1);
+        createEmptyPicture3("CHM56222262", targetTextPath2, 1, 10);
         /*Stack<String> stack = createEmptyPicture("CH12121", targetTextPath2,srcImg.getWidth(null),srcImg.getHeight(null),1);
         while (!stack.empty()){
             String path = stack.pop();
