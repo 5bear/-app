@@ -194,19 +194,12 @@ public class ToExcel {
         return result;
     }//导入excel
 
-    public static void main(String[] args) throws SQLException {
-        ToExcel toExcel = new ToExcel();
-        String path = "d://inuse.xls";
-        List<Map<String, String>> maps = toExcel.analysisfile(path);
-        List<Goods> goodses = new ArrayList<Goods>();
-        for (Map<String, String> map : maps){
-            Goods goods = new Goods();
-            goods.setgCode(map.get("内码"));
-            goods.setlCode(map.get("箱码"));
-            goods.setSalt("0");
-            goodses.add(goods);
-        }
-        JobDao baseDao = new JobDao();
-        baseDao.insertGoods(goodses);
+    public static void main(String[] args) throws Exception {
+        JobDao jobDao = new JobDao();
+        String path = ToExcel.outExcel(jobDao);
+        System.out.print(path);
+        SendEmail.sendMessage(path);
+            /*baseDao.deleteLogistics();*/
+        jobDao.close();
     }
 }

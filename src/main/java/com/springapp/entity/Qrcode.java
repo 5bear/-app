@@ -17,7 +17,8 @@ public class Qrcode {
     private Long id;
     private Long uid;//用户id
     private String path;//存储位置
-
+    private String code;//垛码
+    private Long qrTime;//扫码时间
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     public Long getId() {
@@ -42,5 +43,21 @@ public class Qrcode {
 
     public void setPath(String path) {
         this.path = path;
+    }
+
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
+    }
+
+    public Long getQrTime() {
+        return qrTime;
+    }
+
+    public void setQrTime(Long qrTime) {
+        this.qrTime = qrTime;
     }
 }

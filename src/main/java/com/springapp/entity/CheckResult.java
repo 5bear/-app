@@ -8,14 +8,15 @@ import javax.persistence.Id;
 
 /**
  * Created by 11369 on 2016/10/26.
- * 扫码成功率
+ * 检测结果
  */
 @Entity
 @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-public class SuccessRate {
+public class CheckResult {
     private Long id;
     private Long uid; //用户id
-    private Float rate; //成功率
+    private String pCde;//垛码
+    private Integer result;//0 检测合格 1 表示不合格
     private Long recordTime;//记录时间戳
 
     @Id
@@ -35,13 +36,22 @@ public class SuccessRate {
     public void setUid(Long uid) {
         this.uid = uid;
     }
-
-    public Float getRate() {
-        return rate;
+    //垛码为主键 覆盖
+    @Id
+    public String getpCde() {
+        return pCde;
     }
 
-    public void setRate(Float rate) {
-        this.rate = rate;
+    public void setpCde(String pCde) {
+        this.pCde = pCde;
+    }
+
+    public Integer getResult() {
+        return result;
+    }
+
+    public void setResult(Integer result) {
+        this.result = result;
     }
 
     public Long getRecordTime() {

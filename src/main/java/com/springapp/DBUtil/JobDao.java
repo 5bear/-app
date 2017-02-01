@@ -18,7 +18,7 @@ import java.util.List;
  * Created by 11369 on 2016/9/4.
  */
 public class JobDao {
-    private static String url="jdbc:mysql://localhost:3306/jw?characterEncoding=utf-8";
+    private static String url="jdbc:mysql://118.178.230.233:3306/jw?characterEncoding=utf-8";
     private static String username="root";
     private static String password="root";
     private Connection connection;
@@ -49,8 +49,13 @@ public class JobDao {
      * @throws SQLException
      */
     public List<Logistics> logisticsList() throws SQLException {
+        Long current = System.currentTimeMillis();
+        Long fiveDayAgo = current - 60*60*1000*24*5;//五天前
         List<Logistics> logisticsList = new ArrayList<Logistics>();
-        String sql="select uid,aid,lCode,createTime from Logistics";
+/*
+        String sql="select uid,aid,lCode,createTime from Logistics where createTime > " + fiveDayAgo;
+*/
+        String sql="select uid,aid,lCode,createTime from Logistics where createTime > " + fiveDayAgo + " order by createTime desc";
         PreparedStatement preState=connection.prepareStatement(sql);
         ResultSet rs=preState.executeQuery();
         while (rs.next()) {

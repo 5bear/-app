@@ -1,5 +1,6 @@
 package com.springapp.dao;
 
+import com.springapp.entity.CheckResult;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -7,4 +8,8 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public class QrcodeDao extends BaseDao{
+    public CheckResult getByPcode(String pcode){
+        String hql = "from CheckResult where pcode = '" + pcode + "'";
+        return this.find(hql, CheckResult.class, new Object[]{pcode});
+    }
 }
