@@ -40,13 +40,13 @@ public class AgentDao extends BaseDao {
         return agent1;
     }
     public List<Agent>list(Long uid){
-        return this.findAllBySql("select * from Agent order by convert(agent USING gbk) COLLATE gbk_chinese_ci asc",Agent.class);
+        return this.findAllBySql("select * from Agent where uid = " + uid + " order by convert(agent USING gbk) COLLATE gbk_chinese_ci asc",Agent.class);
     }
     public List<Agent>AgentPageList(Long uid,int pn,int length){
         if(pn<=0)
             pn=1;
         if(length<=0)
             length=0;
-        return this.findSQLByPage("select * from Agent order by convert(agent USING gbk) COLLATE gbk_chinese_ci asc ",Agent.class,(pn-1)*length,length);
+        return this.findSQLByPage("select * from Agent where uid = " + uid + " order by convert(agent USING gbk) COLLATE gbk_chinese_ci asc ",Agent.class,(pn-1)*length,length);
     }
 }

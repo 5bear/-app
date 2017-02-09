@@ -57,12 +57,7 @@ public class MD5 {
     }
 
     public static void main(String[] args){
-        Scanner sc = new Scanner(System.in);
-        System.out.println("内码：");
-        String gCode = sc.nextLine();
-        System.out.println("salt:");
-        String salt = sc.nextLine();
-        String lCode = MD5.MD5Encode(gCode + salt);
+        String lCode = MD5.MD5Encode("jw");
         System.out.println(lCode);
     }
 }

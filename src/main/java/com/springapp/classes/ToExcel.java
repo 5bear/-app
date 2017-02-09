@@ -25,6 +25,7 @@ public class ToExcel {
             Map map=new HashMap();
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd HH:mm");
             map.put("lCode", logistics.getlCode());
+            map.put("createTime",logistics.getCreateTime());
             map.put("formatTime" , sdf.format(logistics.getCreateTime()));
             RelateCode relateCode = baseDao.getRelate(logistics.getlCode());
             if(relateCode != null){
@@ -58,8 +59,8 @@ public class ToExcel {
             mapList.add(map);
         }
         try{
-            String[] titles = new String[]{"托盘号","箱码（无托盘码，可填箱码）", "内码", "始发方代码","始发方名称","客户代码","客户名称","产品代码","产品名称","发运时间","物流公司(可填)"};
-            String[] keys = new String[]{"pCode","lCode", "gCode", "username","dcName","agentNo","agent","gType","gTypeInfo","formatTime","company"};
+            String[] titles = new String[]{"托盘号","箱码（无托盘码，可填箱码）", "内码", "始发方代码","始发方名称","客户代码","客户名称","产品代码","产品名称","发运时间","物流公司(可填)","时间戳"};
+            String[] keys = new String[]{"pCode","lCode", "gCode", "username","dcName","agentNo","agent","gType","gTypeInfo","formatTime","company","createTime"};
 
             HSSFWorkbook wb = new HSSFWorkbook();
             // 在webbook中添加一个sheet,对应Excel文件中的sheet
@@ -198,7 +199,7 @@ public class ToExcel {
         JobDao jobDao = new JobDao();
         String path = ToExcel.outExcel(jobDao);
         System.out.print(path);
-        SendEmail.sendMessage(path);
+       /* SendEmail.sendMessage(path);*/
             /*baseDao.deleteLogistics();*/
         jobDao.close();
     }

@@ -1,5 +1,10 @@
 package com.springapp.entity;
 
+import net.sourceforge.pinyin4j.PinyinHelper;
+import net.sourceforge.pinyin4j.format.HanyuPinyinCaseType;
+import net.sourceforge.pinyin4j.format.HanyuPinyinOutputFormat;
+import net.sourceforge.pinyin4j.format.HanyuPinyinToneType;
+import net.sourceforge.pinyin4j.format.exception.BadHanyuPinyinOutputFormatCombination;
 import org.hibernate.annotations.*;
 
 import javax.persistence.*;
@@ -19,7 +24,6 @@ public class Agent {
     private String agent; //经销商名字
     private String agentNo;//经销商编号
     private Long uid; //用户id
-
 
     public Long getId() {
         return id;
@@ -52,4 +56,5 @@ public class Agent {
     public void setUid(Long uid) {
         this.uid = uid;
     }
+
 }

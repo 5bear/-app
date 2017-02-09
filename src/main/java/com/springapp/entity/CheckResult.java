@@ -5,6 +5,7 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import java.io.Serializable;
 
 /**
  * Created by 11369 on 2016/10/26.
@@ -12,10 +13,10 @@ import javax.persistence.Id;
  */
 @Entity
 @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-public class CheckResult {
+public class CheckResult implements Serializable {
     private Long id;
     private Long uid; //用户id
-    private String pCde;//垛码
+    private String pCode;//垛码
     private Integer result;//0 检测合格 1 表示不合格
     private Long recordTime;//记录时间戳
 
@@ -36,15 +37,18 @@ public class CheckResult {
     public void setUid(Long uid) {
         this.uid = uid;
     }
+
     //垛码为主键 覆盖
-    @Id
-    public String getpCde() {
-        return pCde;
+    public String getpCode() {
+        return pCode;
     }
 
-    public void setpCde(String pCde) {
-        this.pCde = pCde;
+    public void setpCode(String pCode) {
+        this.pCode = pCode;
     }
+
+
+
 
     public Integer getResult() {
         return result;

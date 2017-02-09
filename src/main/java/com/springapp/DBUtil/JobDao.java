@@ -50,19 +50,17 @@ public class JobDao {
      */
     public List<Logistics> logisticsList() throws SQLException {
         Long current = System.currentTimeMillis();
-        Long fiveDayAgo = current - 60*60*1000*24*5;//五天前
+        Long fiveDayAgo = current - 60*60*1000*24*20;//五天前
         List<Logistics> logisticsList = new ArrayList<Logistics>();
 /*
         String sql="select uid,aid,lCode,createTime from Logistics where createTime > " + fiveDayAgo;
 */
-        String sql="select uid,aid,lCode,createTime from Logistics where createTime > " + fiveDayAgo + " order by createTime desc";
+        String sql="select id,uid,aid,lCode,createTime from Logistics where createTime > " + fiveDayAgo + " and id in (select max(id) from Logistics group by lCode) order by createTime desc";
         PreparedStatement preState=connection.prepareStatement(sql);
         ResultSet rs=preState.executeQuery();
         while (rs.next()) {
             Logistics logistics = new Logistics();
-/*
             logistics.setId(rs.getLong("id"));
-*/
             logistics.setUid(rs.getLong("uid"));
             logistics.setAid(rs.getLong("aid"));
             logistics.setlCode(rs.getString("lCode"));
@@ -81,7 +79,7 @@ public class JobDao {
 */
             logisticsList.add(logistics);
         }
-        return logisticsList;
+       return logisticsList;
     }
 
     /**
@@ -204,7 +202,8 @@ public class JobDao {
     public static void main(String[]args) throws Exception {
         JobDao jobDao = new JobDao();
         String path = ToExcel.outExcel(jobDao);
-        SendEmail.sendMessage(path);
+        System.out.print(path);
+       /* SendEmail.sendMessage(path);*/
             /*baseDao.deleteLogistics();*/
         jobDao.close();
     }

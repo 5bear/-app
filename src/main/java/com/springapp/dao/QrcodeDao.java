@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class QrcodeDao extends BaseDao{
     public CheckResult getByPcode(String pcode){
-        String hql = "from CheckResult where pcode = '" + pcode + "'";
+        String hql = "from CheckResult where pCode = ?";
         return this.find(hql, CheckResult.class, new Object[]{pcode});
     }
 }

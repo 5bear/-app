@@ -73,6 +73,7 @@ public class QrcodeController extends BaseController {
      * @param uid 用户id
      * @param timestamp 时间戳
      * @param status 0 合格 1 不合格
+     * @param pCode 垛码
      * @return
      */
     @RequestMapping(value = "/CheckResult",method = RequestMethod.POST)
@@ -99,7 +100,7 @@ public class QrcodeController extends BaseController {
                 checkResult.setUid(account.getId());
                 checkResult.setRecordTime(timestamp);
                 checkResult.setResult(status);
-                checkResult.setpCde(pCode);
+                checkResult.setpCode(pCode);
                 if(flag)
                     baseDao.save(checkResult);
                 else
@@ -120,6 +121,8 @@ public class QrcodeController extends BaseController {
      * @param timestamp 时间戳
      * @return
      */
+    @RequestMapping(value = "/QrLog",method = RequestMethod.POST)
+    @ResponseBody
     public JSON QrLog(Long uid, String code, Long timestamp){
         ReturnCode returnCode=new ReturnCode();
         if(uid==null||code==null||timestamp==null){
