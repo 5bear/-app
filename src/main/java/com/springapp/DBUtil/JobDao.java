@@ -50,7 +50,7 @@ public class JobDao {
      */
     public List<Logistics> logisticsList() throws SQLException {
         Long current = System.currentTimeMillis();
-        Long fiveDayAgo = current - 60*60*1000*24*20;//五天前
+        Long fiveDayAgo = current - 60*60*1000*24*3;//五天前
         List<Logistics> logisticsList = new ArrayList<Logistics>();
 /*
         String sql="select uid,aid,lCode,createTime from Logistics where createTime > " + fiveDayAgo;
@@ -203,7 +203,7 @@ public class JobDao {
         JobDao jobDao = new JobDao();
         String path = ToExcel.outExcel(jobDao);
         System.out.print(path);
-       /* SendEmail.sendMessage(path);*/
+        SendEmail.sendMessage(path);
             /*baseDao.deleteLogistics();*/
         jobDao.close();
     }

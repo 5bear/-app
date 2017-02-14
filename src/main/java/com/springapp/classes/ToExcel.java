@@ -36,11 +36,13 @@ public class ToExcel {
             Goods goods = baseDao.getGoods(logistics.getlCode());
             if(goods != null){
                 map.put("gCode", goods.getgCode());
+                map.put("gType", goods.getgType());
+                map.put("gTypeInfo", goods.getgTypeInfo());
             }else{
                 map.put("gCode", "");
+                map.put("gType", "");
+                map.put("gTypeInfo", "");
             }
-            map.put("gType", "");
-            map.put("gTypeInfo", "");
             Agent agent = baseDao.getAgent(logistics.getAid());
             if(agent != null){
                 map.put("agent", agent.getAgent());
@@ -196,11 +198,9 @@ public class ToExcel {
     }//导入excel
 
     public static void main(String[] args) throws Exception {
-        JobDao jobDao = new JobDao();
-        String path = ToExcel.outExcel(jobDao);
-        System.out.print(path);
-       /* SendEmail.sendMessage(path);*/
-            /*baseDao.deleteLogistics();*/
-        jobDao.close();
+        String str = "xiangyanglu:shuiyuanshangmaoyouxiangongsi";
+        String reg = "[^a-zA-Z]";
+        str=str.replaceAll(reg,"");
+        System.out.print(str);
     }
 }

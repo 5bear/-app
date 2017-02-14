@@ -62,7 +62,8 @@ public class Agent {
 
     public String getPinyin() {
         try {
-            pinyin = converterToSpellAll(agent);
+            String reg = "[^a-zA-Z]";
+            pinyin = converterToSpellAll(agent).replaceAll(reg,"");
             return pinyin.replaceAll(" ","");
         }catch (Exception e){
             return "fail";
@@ -75,7 +76,8 @@ public class Agent {
 
     public String getPinyinAbbr() {
         try {
-            pinyinAbbr = converterToSpell(agent.trim());
+            String reg = "[^a-zA-Z]";
+            pinyinAbbr = converterToSpell(agent.trim()).replaceAll(reg,"");
             return pinyinAbbr.replaceAll(" ","");
         }catch (Exception e){
             return "fail";
