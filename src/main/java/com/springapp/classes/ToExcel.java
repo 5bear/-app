@@ -27,6 +27,7 @@ public class ToExcel {
             map.put("lCode", logistics.getlCode());
             map.put("createTime",logistics.getCreateTime());
             map.put("formatTime" , sdf.format(logistics.getCreateTime()));
+            map.put("operationType", logistics.getOperationType()==null?"":logistics.getOperationType());
             RelateCode relateCode = baseDao.getRelate(logistics.getlCode());
             if(relateCode != null){
                 map.put("pCode", relateCode.getpCode());
@@ -61,8 +62,8 @@ public class ToExcel {
             mapList.add(map);
         }
         try{
-            String[] titles = new String[]{"托盘号","箱码（无托盘码，可填箱码）", "内码", "始发方代码","始发方名称","客户代码","客户名称","产品代码","产品名称","发运时间","物流公司(可填)","时间戳"};
-            String[] keys = new String[]{"pCode","lCode", "gCode", "username","dcName","agentNo","agent","gType","gTypeInfo","formatTime","company","createTime"};
+            String[] titles = new String[]{"托盘号","箱码（无托盘码，可填箱码）", "内码", "始发方代码","始发方名称","客户代码","客户名称","产品代码","产品名称","发运时间","物流公司(可填)","时间戳","操作类型"};
+            String[] keys = new String[]{"pCode","lCode", "gCode", "username","dcName","agentNo","agent","gType","gTypeInfo","formatTime","company","createTime","operationType"};
 
             HSSFWorkbook wb = new HSSFWorkbook();
             // 在webbook中添加一个sheet,对应Excel文件中的sheet

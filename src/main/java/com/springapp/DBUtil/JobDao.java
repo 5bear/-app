@@ -50,12 +50,12 @@ public class JobDao {
      */
     public List<Logistics> logisticsList() throws SQLException {
         Long current = System.currentTimeMillis();
-        Long fiveDayAgo = current - 60*60*1000*24*3;//五天前
+        Long fiveDayAgo = current - 60*60*1000*24*3;//3天前
         List<Logistics> logisticsList = new ArrayList<Logistics>();
 /*
         String sql="select uid,aid,lCode,createTime from Logistics where createTime > " + fiveDayAgo;
 */
-        String sql="select id,uid,aid,lCode,createTime from Logistics where createTime > " + fiveDayAgo + " and id in (select max(id) from Logistics group by lCode) order by createTime desc";
+        String sql="select id,uid,aid,lCode,createTime from Logistics where operationType = 'DUO' and createTime > " + fiveDayAgo + " and id in (select max(id) from Logistics group by lCode) order by createTime desc";
         PreparedStatement preState=connection.prepareStatement(sql);
         ResultSet rs=preState.executeQuery();
         while (rs.next()) {
@@ -79,7 +79,56 @@ public class JobDao {
 */
             logisticsList.add(logistics);
         }
-       return logisticsList;
+        sql="select id,uid,aid,lCode,createTime from Logistics where operationType = 'BOX' and createTime > " + fiveDayAgo + "order by createTime desc";
+        preState=connection.prepareStatement(sql);
+        rs=preState.executeQuery();
+        while (rs.next()) {
+            Logistics logistics = new Logistics();
+            logistics.setId(rs.getLong("id"));
+            logistics.setUid(rs.getLong("uid"));
+            logistics.setAid(rs.getLong("aid"));
+            logistics.setlCode(rs.getString("lCode"));
+/*
+            logistics.setQrTime(rs.getString("qrTime"));
+*/
+            logistics.setCreateTime(rs.getLong("createTime"));
+/*
+            logistics.setRemark1(rs.getString("remark1"));
+*/
+/*
+            logistics.setRemark2(rs.getString("remark2"));
+*/
+/*
+            logistics.setRemark3(rs.getString("remark3"));
+*/
+            logisticsList.add(logistics);
+        }
+        sql="select id,uid,aid,lCode,createTime,operationType from Logistics where operationType = 'BOX' and createTime > " + fiveDayAgo + "order by createTime desc";
+        preState=connection.prepareStatement(sql);
+        rs=preState.executeQuery();
+        while (rs.next()) {
+            Logistics logistics = new Logistics();
+            logistics.setId(rs.getLong("id"));
+            logistics.setUid(rs.getLong("uid"));
+            logistics.setAid(rs.getLong("aid"));
+            logistics.setlCode(rs.getString("lCode"));
+/*
+            logistics.setQrTime(rs.getString("qrTime"));
+*/
+            logistics.setCreateTime(rs.getLong("createTime"));
+            logistics.setOperationType(rs.getString("operationType"));
+/*
+            logistics.setRemark1(rs.getString("remark1"));
+*/
+/*
+            logistics.setRemark2(rs.getString("remark2"));
+*/
+/*
+            logistics.setRemark3(rs.getString("remark3"));
+*/
+            logisticsList.add(logistics);
+        }
+        return logisticsList;
     }
 
     /**
@@ -203,7 +252,7 @@ public class JobDao {
         JobDao jobDao = new JobDao();
         String path = ToExcel.outExcel(jobDao);
         System.out.print(path);
-        SendEmail.sendMessage(path);
+       /* SendEmail.sendMessage(path);*/
             /*baseDao.deleteLogistics();*/
         jobDao.close();
     }

@@ -26,7 +26,12 @@ public class Logistics {
     private Long aid;//经销商aid
     private String qrTime;//扫码时间 yyyy-MM-dd HH:mm:ss
     private Long createTime;
-    private String remark1;//备选字段1
+    private String operationType;//DUO BOX WITHDRAW 默认DUO
+    /*操作类型 按垛发货，散箱发货、撤回
+      默认按垛发货，跟以前处理一样
+      标记散箱发货的，导出的时候箱码一样的也都要导出
+      导出的Excel新增一列操作类型散箱发货和整垛发货，导出的表格里操作类型列空白不填,撤回的标记为撤回
+    */
     private String remark2;//备选字段2
     private String remark3;//备选字段3
 
@@ -78,12 +83,12 @@ public class Logistics {
         this.createTime = createTime;
     }
 
-    public String getRemark1() {
-        return remark1;
+    public String getOperationType() {
+        return operationType;
     }
 
-    public void setRemark1(String remark1) {
-        this.remark1 = remark1;
+    public void setOperationType(String operationType) {
+        this.operationType = operationType;
     }
 
     public String getRemark2() {
