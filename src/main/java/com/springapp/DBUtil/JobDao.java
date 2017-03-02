@@ -79,7 +79,7 @@ public class JobDao {
 */
             logisticsList.add(logistics);
         }
-        sql="select id,uid,aid,lCode,createTime from Logistics where operationType = 'BOX' and createTime > " + fiveDayAgo + "order by createTime desc";
+        sql="select id,uid,aid,lCode,createTime from Logistics where operationType = 'BOX' and createTime > " + fiveDayAgo + " order by createTime desc";
         preState=connection.prepareStatement(sql);
         rs=preState.executeQuery();
         while (rs.next()) {
@@ -103,7 +103,7 @@ public class JobDao {
 */
             logisticsList.add(logistics);
         }
-        sql="select id,uid,aid,lCode,createTime,operationType from Logistics where operationType = 'BOX' and createTime > " + fiveDayAgo + "order by createTime desc";
+        sql="select id,uid,aid,lCode,createTime,operationType from Logistics where operationType = 'WITHDRAW' and createTime > " + fiveDayAgo + "order by createTime desc";
         preState=connection.prepareStatement(sql);
         rs=preState.executeQuery();
         while (rs.next()) {
