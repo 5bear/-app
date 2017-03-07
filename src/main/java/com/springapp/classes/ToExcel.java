@@ -27,7 +27,14 @@ public class ToExcel {
             map.put("lCode", logistics.getlCode());
             map.put("createTime",logistics.getCreateTime());
             map.put("formatTime" , sdf.format(logistics.getCreateTime()));
-            map.put("operationType", logistics.getOperationType()==null?"":logistics.getOperationType());
+            if(logistics.getOperationType() == null)
+                map.put("operationType", "");
+            else if(logistics.getOperationType().equals("BOX"))
+                map.put("operationType", "新增");
+            else if(logistics.getOperationType().equals("WITHDRAW"))
+                map.put("operationType", "撤回");
+            else
+                map.put("operationType", "");
             RelateCode relateCode = baseDao.getRelate(logistics.getlCode());
             if(relateCode != null){
                 map.put("pCode", relateCode.getpCode());
@@ -35,13 +42,15 @@ public class ToExcel {
                 map.put("pCode", "");
             }
             Goods goods = baseDao.getGoods(logistics.getlCode());
+            map.put("gType", "");
             if(goods != null){
                 map.put("gCode", goods.getgCode());
+/*
                 map.put("gType", goods.getgType());
+*/
                 map.put("gTypeInfo", goods.getgTypeInfo());
             }else{
                 map.put("gCode", "");
-                map.put("gType", "");
                 map.put("gTypeInfo", "");
             }
             Agent agent = baseDao.getAgent(logistics.getAid());

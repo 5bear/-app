@@ -53,7 +53,7 @@ public class LogisticsController extends BaseController{
                 tmp.setUid(uid);
                 tmp.setQrTime(logistics.getQrTime());
                 tmp.setCreateTime(logistics.getCreateTime());
-                tmp.setOperationType(logistics.getOperationType());
+                tmp.setOperationType(logistics.getOperationType()==null?"DUO":logistics.getOperationType());
                 tmp.setRemark2(logistics.getRemark2());
                 tmp.setRemark3(logistics.getRemark3());
                 logisticsDao.update(tmp);

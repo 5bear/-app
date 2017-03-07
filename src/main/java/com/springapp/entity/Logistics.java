@@ -26,7 +26,7 @@ public class Logistics {
     private Long aid;//经销商aid
     private String qrTime;//扫码时间 yyyy-MM-dd HH:mm:ss
     private Long createTime;
-    private String operationType;//DUO BOX WITHDRAW 默认DUO
+    private String operationType;//PALLET BOX WITHDRAW 默认为PALLET
     /*操作类型 按垛发货，散箱发货、撤回
       默认按垛发货，跟以前处理一样
       标记散箱发货的，导出的时候箱码一样的也都要导出

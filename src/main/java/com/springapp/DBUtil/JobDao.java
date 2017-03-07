@@ -10,9 +10,8 @@ import java.io.IOException;
 import java.sql.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
+import java.util.*;
 import java.util.Date;
-import java.util.List;
 
 /**
  * Created by 11369 on 2016/9/4.
@@ -50,12 +49,12 @@ public class JobDao {
      */
     public List<Logistics> logisticsList() throws SQLException {
         Long current = System.currentTimeMillis();
-        Long fiveDayAgo = current - 60*60*1000*24*3;//3天前
+        Long threeDaysAgo = current - 60*60*1000*24*5;//3天前
         List<Logistics> logisticsList = new ArrayList<Logistics>();
 /*
         String sql="select uid,aid,lCode,createTime from Logistics where createTime > " + fiveDayAgo;
 */
-        String sql="select id,uid,aid,lCode,createTime from Logistics where operationType = 'DUO' and createTime > " + fiveDayAgo + " and id in (select max(id) from Logistics group by lCode) order by createTime desc";
+        String sql="select id,uid,aid,lCode,createTime from Logistics where operationType = 'PALLET'and createTime> " + threeDaysAgo + " and id in (select max(id) from Logistics group by lCode) order by createTime desc";
         PreparedStatement preState=connection.prepareStatement(sql);
         ResultSet rs=preState.executeQuery();
         while (rs.next()) {
@@ -79,7 +78,7 @@ public class JobDao {
 */
             logisticsList.add(logistics);
         }
-        sql="select id,uid,aid,lCode,createTime from Logistics where operationType = 'BOX' and createTime > " + fiveDayAgo + " order by createTime desc";
+        sql="select id,uid,aid,lCode,createTime from Logistics where  isNULL(operationType) and createTime> " + threeDaysAgo + " order by createTime desc";
         preState=connection.prepareStatement(sql);
         rs=preState.executeQuery();
         while (rs.next()) {
@@ -103,7 +102,31 @@ public class JobDao {
 */
             logisticsList.add(logistics);
         }
-        sql="select id,uid,aid,lCode,createTime,operationType from Logistics where operationType = 'WITHDRAW' and createTime > " + fiveDayAgo + "order by createTime desc";
+        sql="select id,uid,aid,lCode,createTime from Logistics where operationType = 'BOX' and createTime> " + threeDaysAgo + " order by createTime desc";
+        preState=connection.prepareStatement(sql);
+        rs=preState.executeQuery();
+        while (rs.next()) {
+            Logistics logistics = new Logistics();
+            logistics.setId(rs.getLong("id"));
+            logistics.setUid(rs.getLong("uid"));
+            logistics.setAid(rs.getLong("aid"));
+            logistics.setlCode(rs.getString("lCode"));
+/*
+            logistics.setQrTime(rs.getString("qrTime"));
+*/
+            logistics.setCreateTime(rs.getLong("createTime"));
+/*
+            logistics.setRemark1(rs.getString("remark1"));
+*/
+/*
+            logistics.setRemark2(rs.getString("remark2"));
+*/
+/*
+            logistics.setRemark3(rs.getString("remark3"));
+*/
+            logisticsList.add(logistics);
+        }
+        sql="select id,uid,aid,lCode,createTime,operationType from Logistics where operationType = 'WITHDRAW' and createTime> " + threeDaysAgo + " order by createTime desc";
         preState=connection.prepareStatement(sql);
         rs=preState.executeQuery();
         while (rs.next()) {
@@ -128,6 +151,17 @@ public class JobDao {
 */
             logisticsList.add(logistics);
         }
+        Collections.sort(logisticsList, new Comparator<Logistics>() {
+            @Override
+            public int compare(Logistics o1, Logistics o2) {
+                if(o1.getCreateTime() < o2.getCreateTime())
+                    return 1;
+                else if(o1.getCreateTime() == o2.getCreateTime())
+                    return 0;
+                else
+                    return -1;
+            }
+        });
         return logisticsList;
     }
 
@@ -252,7 +286,7 @@ public class JobDao {
         JobDao jobDao = new JobDao();
         String path = ToExcel.outExcel(jobDao);
         System.out.print(path);
-       /* SendEmail.sendMessage(path);*/
+        SendEmail.sendMessage(path);
             /*baseDao.deleteLogistics();*/
         jobDao.close();
     }
