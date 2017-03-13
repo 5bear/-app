@@ -38,7 +38,7 @@ public class UserController extends BaseController {
         account = new Account();
         try {
             account.setUsername(username);
-            account.setPassword(MD5.MD5Encode(password));
+            account.setPassword(password);
             account.setDcName(dcName);
             accountDao.save(account);
         }catch (Exception e){

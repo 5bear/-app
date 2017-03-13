@@ -26,7 +26,7 @@ public class ToExcel {
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd HH:mm");
             map.put("lCode", logistics.getlCode());
             map.put("createTime",logistics.getCreateTime());
-            map.put("formatTime" , sdf.format(logistics.getCreateTime()));
+            map.put("formatTime" , sdf.format(new Date(logistics.getCreateTime())));
             if(logistics.getOperationType() == null)
                 map.put("operationType", "");
             else if(logistics.getOperationType().equals("BOX"))
@@ -156,6 +156,117 @@ public class ToExcel {
         }
     }
 
+    public static String outExcel2(JobDao baseDao) throws ParseException, SQLException {
+        List<Map> mapList=new ArrayList<Map>();
+        List<RelateCode> relateCodeList = baseDao.getRelateList();
+        for(RelateCode relateCode: relateCodeList){
+            List<Logistics> logisticsList = baseDao.getLogistics(relateCode.getlCode());
+            Map map=new HashMap();
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd HH:mm");
+            map.put("pCode", relateCode.getpCode());
+            map.put("formatTime" , sdf.format(new Date(relateCode.getTimestamp())));
+            map.put("lCode", relateCode.getlCode());
+            if(relateCode.getUid() != null && relateCode.getUid() != 0)
+                map.put("username", relateCode.getUid());
+            else
+                map.put("username", "");
+            for(Logistics logistics: logisticsList){
+                Goods goods = baseDao.getGoods(logistics.getlCode());
+                if(goods != null){
+                    map.put("gCode", goods.getgCode());
+                }else{
+                    map.put("gCode", "");
+                }
+                map.put("dcName", "");
+                map.put("company", "");
+            }
+            mapList.add(map);
+        }
+        try{
+            String[] titles = new String[]{"托盘号","箱码（无托盘码，可填箱码）", "内码", "始发方代码","始发方名称","客户代码","客户名称","产品代码","产品名称","发运时间","物流公司(可填)","时间戳","操作类型"};
+            String[] keys = new String[]{"pCode","lCode", "gCode", "username","dcName","agentNo","agent","gType","gTypeInfo","formatTime","company","createTime","operationType"};
+
+            HSSFWorkbook wb = new HSSFWorkbook();
+            // 在webbook中添加一个sheet,对应Excel文件中的sheet
+            HSSFSheet sheet = wb.createSheet("sheet1");
+            // 在sheet中添加表头第0行
+            HSSFRow row = sheet.createRow((int) 0);
+            // 创建单元格，并设置值表头 设置表头居中
+            HSSFCellStyle headStyle = wb.createCellStyle();
+            headStyle.setAlignment(HSSFCellStyle.ALIGN_CENTER); // 创建一个居中格式
+            headStyle.setBorderBottom((short) 1);
+            headStyle.setBorderLeft((short) 1);
+            headStyle.setBorderTop((short) 1);
+            headStyle.setBorderRight((short) 1);
+
+            HSSFRow firstRow = sheet.createRow((int) 0);
+            HSSFCell cell;
+            int i = 0;
+            for (String title : titles) {
+                cell = firstRow.createCell((short) i);
+                cell.setCellValue(title);
+                cell.setCellStyle(headStyle);
+                i++;
+            }
+            HSSFCellStyle style = wb.createCellStyle();
+            style.setAlignment(HSSFCellStyle.ALIGN_CENTER);
+            i = 1;
+
+
+
+            for (Map map : mapList) {
+                row = sheet.createRow(i);
+
+                row.setRowStyle(style);
+                int j = 0;
+                //for(int n=0;i<enrollCodeList.size();n++)
+                for (String key : keys) {
+                    cell = row.createCell(j);
+                    cell.setCellValue(map.get(key) == null?"" : map.get(key) + "");
+                    cell.setCellStyle(style);
+                    j++;
+                }
+                i++;
+            }
+            for(i = 0; i<titles.length; i++){
+                sheet.autoSizeColumn(i);
+            }
+            String fileName = format.format(new Date()) + ".xls";
+            String path = System.getProperty("user.dir") + "/" + "excels";
+            File file = new File(path);
+            if(!file.exists())
+                file.mkdirs();
+            String target = path + "/" +fileName;
+            FileOutputStream o=null;
+            try {
+                //输出文件
+                o = new FileOutputStream(target);
+                wb.write(o);
+                o.close();
+                return target;
+            } catch (Exception e) {
+                // TODO: handle exception
+                e.printStackTrace();
+                return "fail";
+            }
+            /*response.reset();
+            // 设置response的Header
+            response.setHeader("pragma", "no-cache");
+            response.setCharacterEncoding("UTF-8");
+            response.setHeader("Content-Disposition", "attachment; filename=" + "result" + ".xls");
+            response.setContentType("application ");
+            try {
+                wb.write(response.getOutputStream());
+                response.flushBuffer();
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }*/
+        }
+        catch (Exception e){
+            System.out.print("exception"+e);
+            return "fail";
+        }
+    }
     public List<Map<String, String>> analysisfile(String path){
 
         List<Map<String, String>> result=new ArrayList<Map<String, String>>();

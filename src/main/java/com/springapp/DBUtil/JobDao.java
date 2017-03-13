@@ -49,7 +49,7 @@ public class JobDao {
      */
     public List<Logistics> logisticsList() throws SQLException {
         Long current = System.currentTimeMillis();
-        Long threeDaysAgo = current - 60*60*1000*24*5;//3天前
+        Long threeDaysAgo = current - 60*60*1000*24*8;//3天前
         List<Logistics> logisticsList = new ArrayList<Logistics>();
 /*
         String sql="select uid,aid,lCode,createTime from Logistics where createTime > " + fiveDayAgo;
@@ -102,7 +102,7 @@ public class JobDao {
 */
             logisticsList.add(logistics);
         }
-        sql="select id,uid,aid,lCode,createTime from Logistics where operationType = 'BOX' and createTime> " + threeDaysAgo + " order by createTime desc";
+        sql="select id,uid,aid,lCode,createTime,operationType from Logistics where operationType = 'BOX' and createTime> " + threeDaysAgo + " order by createTime desc";
         preState=connection.prepareStatement(sql);
         rs=preState.executeQuery();
         while (rs.next()) {
@@ -115,6 +115,7 @@ public class JobDao {
             logistics.setQrTime(rs.getString("qrTime"));
 */
             logistics.setCreateTime(rs.getLong("createTime"));
+            logistics.setOperationType(rs.getString("operationType"));
 /*
             logistics.setRemark1(rs.getString("remark1"));
 */
@@ -165,6 +166,21 @@ public class JobDao {
         return logisticsList;
     }
 
+    public List<Logistics> getLogistics(String lCode) throws SQLException {
+        String sql = "select * from Logistics where lCode = '" + lCode + "'";
+        List<Logistics> logisticsList = new ArrayList<Logistics>();
+        PreparedStatement preState = connection.prepareStatement(sql);
+        ResultSet rs = preState.executeQuery();
+        while (rs.next()){
+            Logistics logistics = new Logistics();
+            logistics.setUid(rs.getLong("uid"));
+            logistics.setAid(rs.getLong("aid"));
+            logistics.setlCode(rs.getString("lCode"));
+            logistics.setRemark3(rs.getString("remark3"));
+            logisticsList.add(logistics);
+        }
+        return logisticsList;
+    }
     /**
      * 删除三天前数据
      */
@@ -274,19 +290,38 @@ public class JobDao {
         while (rs.next()){
             relateCode = new RelateCode();
             relateCode.setId(rs.getLong("id"));
+            relateCode.setUid(rs.getLong("uid"));
             relateCode.setlCode(lCode);
             relateCode.setpCode(rs.getString("pCode"));
-/*
             relateCode.setTimestamp(rs.getLong("timestamp"));
-*/
         }
         return relateCode;
+    }
+
+    public List<RelateCode> getRelateList() throws SQLException {
+        Long current = System.currentTimeMillis();
+        Long threeDaysAgo = current - 3600 * 1000 * 24 * 3;//3天前
+        List<RelateCode> relateCodeList = new ArrayList<RelateCode>();
+        String sql = "select * from RelateCode where timestamp > " + threeDaysAgo + " and id in (select max(id) from RelateCode group by lCode) order by timestamp desc";
+        PreparedStatement preState = connection.prepareStatement(sql);
+        ResultSet rs = preState.executeQuery();
+        RelateCode relateCode = null;
+        while (rs.next()){
+            relateCode = new RelateCode();
+            relateCode.setId(rs.getLong("id"));
+            relateCode.setlCode(rs.getString("lCode"));
+            relateCode.setpCode(rs.getString("pCode"));
+            relateCode.setTimestamp(rs.getLong("timestamp"));
+            relateCode.setUid(rs.getLong("uid"));
+            relateCodeList.add(relateCode);
+        }
+        return relateCodeList;
     }
     public static void main(String[]args) throws Exception {
         JobDao jobDao = new JobDao();
         String path = ToExcel.outExcel(jobDao);
         System.out.print(path);
-        SendEmail.sendMessage(path);
+        SendEmail.sendMessage(path, "测试箱垛关联");
             /*baseDao.deleteLogistics();*/
         jobDao.close();
     }

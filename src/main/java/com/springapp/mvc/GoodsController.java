@@ -171,18 +171,25 @@ public class GoodsController extends BaseController {
                 returnCode.setFail("参数不能为空");
                 return (JSON)JSON.toJSON(returnCode);
             }
-            RelateCode relateCode = relateCodeDao.getByLcode(lCode);
-            if(relateCode!=null){
+            RelateCode relateCode = new RelateCode();
+            relateCode.setUid(uid);
+            relateCode.setlCode(lCode);
+            relateCode.setpCode(pCode);
+            relateCode.setTimestamp(System.currentTimeMillis());
+            goodsDao.save(relateCode);
+            /*if(relateCode!=null){
+                relateCode.setUid(uid);
                 relateCode.setpCode(pCode);
                 relateCode.setTimestamp(System.currentTimeMillis());
                 relateCodeDao.update(relateCode);
             }else {
                 relateCode = new RelateCode();
+                relateCode.setUid(uid);
                 relateCode.setlCode(lCode);
                 relateCode.setpCode(pCode);
                 relateCode.setTimestamp(System.currentTimeMillis());
                 goodsDao.save(relateCode);
-            }
+            }*/
             returnCode.setSuccess(relateCode);
         }
         return (JSON)JSON.toJSON(returnCode);

@@ -17,6 +17,7 @@ public class RelateCode {
     private String lCode;//箱码
     private String pCode;//垛码
     private Long timestamp;
+    private Long uid;//用户id
 
     public Long getId() {
         return id;
@@ -48,5 +49,13 @@ public class RelateCode {
 
     public void setTimestamp(Long timestamp) {
         this.timestamp = timestamp;
+    }
+
+    public Long getUid() {
+        return uid;
+    }
+
+    public void setUid(Long uid) {
+        this.uid = uid;
     }
 }

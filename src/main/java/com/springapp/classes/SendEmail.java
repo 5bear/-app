@@ -57,7 +57,7 @@ public class SendEmail {
         transport.close();*/
     }
 
-    public static void sendMessage(String targetPath) throws Exception {
+    public static void sendMessage(String targetPath, String title) throws Exception {
         // 1. 创建参数配置, 用于连接邮件服务器的参数配置
         Properties props = new Properties();                    // 参数配置
         props.setProperty("mail.transport.protocol", "smtp");   // 使用的协议（JavaMail规范要求）
@@ -80,7 +80,7 @@ public class SendEmail {
         session.setDebug(true);                                 // 设置为debug模式, 可以查看详细的发送 log
 
         // 3. 创建一封邮件
-        MimeMessage message = createMimeMessage(session, myEmailAccount, receiveMailAccount, targetPath);
+        MimeMessage message = createMimeMessage(session, myEmailAccount, receiveMailAccount, targetPath, title);
 
         // 也可以保持到本地查看
         // message.writeTo(file_out_put_stream);
@@ -102,7 +102,7 @@ public class SendEmail {
     /**
      * 创建一封复杂邮件（文本+图片+附件）
      */
-    public static MimeMessage createMimeMessage(Session session, String sendMail, String receiveMail, String targetPath) throws Exception {
+    public static MimeMessage createMimeMessage(Session session, String sendMail, String receiveMail, String targetPath, String title) throws Exception {
         // 1. 创建邮件对象
         MimeMessage message = new MimeMessage(session);
 
@@ -113,7 +113,7 @@ public class SendEmail {
         message.addRecipient(RecipientType.TO, new InternetAddress(receiveMail, "百威运维", "UTF-8"));
 
         // 4. Subject: 邮件主题
-        message.setSubject("物流信息", "UTF-8");
+        message.setSubject(title, "UTF-8");
 
         /*
          * 下面是邮件内容的创建:

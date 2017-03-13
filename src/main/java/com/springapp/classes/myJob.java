@@ -16,7 +16,9 @@ public class myJob extends QuartzJobBean {
         try {
             JobDao jobDao = new JobDao();
             String path = ToExcel.outExcel(jobDao);
-            SendEmail.sendMessage(path);
+            SendEmail.sendMessage(path, "物流信息");
+            path = ToExcel.outExcel2(jobDao);
+            SendEmail.sendMessage(path, "箱垛关联");
             /*baseDao.deleteLogistics();*/
             jobDao.close();
         } catch (SQLException e) {

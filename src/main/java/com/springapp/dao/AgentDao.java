@@ -1,6 +1,5 @@
 package com.springapp.dao;
 
-import com.springapp.classes.Guid;
 import com.springapp.entity.Agent;
 import org.springframework.stereotype.Repository;
 
