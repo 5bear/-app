@@ -119,7 +119,7 @@ public class ToExcel {
             for(i = 0; i<titles.length; i++){
                 sheet.autoSizeColumn(i);
             }
-            String fileName = format.format(new Date()) + ".xls";
+            String fileName = format.format(new Date()) + "_box.xls";
             String path = System.getProperty("user.dir") + "/" + "excels";
             File file = new File(path);
             if(!file.exists())
@@ -166,6 +166,12 @@ public class ToExcel {
             map.put("pCode", relateCode.getpCode());
             map.put("formatTime" , sdf.format(new Date(relateCode.getTimestamp())));
             map.put("lCode", relateCode.getlCode());
+            if(relateCode.getOperationType() == null)
+                map.put("operationType", "");
+            else if(relateCode.getOperationType().equals("BOX"))
+                map.put("operationType", "新增");
+            else if(relateCode.getOperationType().equals("WITHDRAW"))
+                map.put("operationType", "撤回");
             if(relateCode.getUid() != null && relateCode.getUid() != 0)
                 map.put("username", relateCode.getUid());
             else
@@ -231,7 +237,7 @@ public class ToExcel {
             for(i = 0; i<titles.length; i++){
                 sheet.autoSizeColumn(i);
             }
-            String fileName = format.format(new Date()) + ".xls";
+            String fileName = format.format(new Date()) + "_pallet.xls";
             String path = System.getProperty("user.dir") + "/" + "excels";
             File file = new File(path);
             if(!file.exists())

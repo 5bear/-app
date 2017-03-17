@@ -49,7 +49,7 @@ public class JobDao {
      */
     public List<Logistics> logisticsList() throws SQLException {
         Long current = System.currentTimeMillis();
-        Long threeDaysAgo = current - 60*60*1000*24*8;//3天前
+        Long threeDaysAgo = current - 60*60*1000*24*3;//3天前
         List<Logistics> logisticsList = new ArrayList<Logistics>();
 /*
         String sql="select uid,aid,lCode,createTime from Logistics where createTime > " + fiveDayAgo;
@@ -313,15 +313,16 @@ public class JobDao {
             relateCode.setpCode(rs.getString("pCode"));
             relateCode.setTimestamp(rs.getLong("timestamp"));
             relateCode.setUid(rs.getLong("uid"));
+            relateCode.setOperationType(rs.getString("operationType"));
             relateCodeList.add(relateCode);
         }
         return relateCodeList;
     }
     public static void main(String[]args) throws Exception {
         JobDao jobDao = new JobDao();
-        String path = ToExcel.outExcel(jobDao);
+        String path = ToExcel.outExcel2(jobDao);
         System.out.print(path);
-        SendEmail.sendMessage(path, "测试箱垛关联");
+        /*SendEmail.sendMessage(path, "测试箱垛关联");*/
             /*baseDao.deleteLogistics();*/
         jobDao.close();
     }

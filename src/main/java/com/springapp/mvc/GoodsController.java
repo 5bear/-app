@@ -8,6 +8,7 @@ import com.springapp.entity.RelateCode;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletResponse;
@@ -161,22 +162,30 @@ public class GoodsController extends BaseController {
      */
     @RequestMapping(value = "/relate",method = RequestMethod.POST)
     @ResponseBody
-    public JSON relate(String lCode, String pCode, Long uid){
+    public JSON relate(@RequestParam(value = "lCode") String lCode,@RequestParam(value = "pCode", required = false) String pCode,@RequestParam(value = "uid") Long uid,@RequestParam(value = "operationType", required = false) String operationType){
         ReturnCode returnCode=new ReturnCode();
         Account account= accountDao.get(Account.class, uid);
         if(account==null){
             returnCode.setFail("请首先登录");
         }else {
-            if(lCode==null||lCode.equals("")||pCode==null||pCode.equals("")){
-                returnCode.setFail("参数不能为空");
+            if(lCode==null||lCode.equals("")){
+                returnCode.setFail("箱码不能为空不能为空");
                 return (JSON)JSON.toJSON(returnCode);
             }
             RelateCode relateCode = new RelateCode();
-            relateCode.setUid(uid);
-            relateCode.setlCode(lCode);
-            relateCode.setpCode(pCode);
-            relateCode.setTimestamp(System.currentTimeMillis());
-            goodsDao.save(relateCode);
+            if(operationType != null && !operationType.equals("")) {
+                relateCode.setUid(uid);
+                relateCode.setlCode(lCode);
+                relateCode.setTimestamp(System.currentTimeMillis());
+                relateCode.setOperationType(operationType);
+                goodsDao.save(relateCode);
+            }else{
+                relateCode.setUid(uid);
+                relateCode.setlCode(lCode);
+                relateCode.setpCode(pCode);
+                relateCode.setTimestamp(System.currentTimeMillis());
+                goodsDao.save(relateCode);
+            }
             /*if(relateCode!=null){
                 relateCode.setUid(uid);
                 relateCode.setpCode(pCode);

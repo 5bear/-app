@@ -18,6 +18,7 @@ public class RelateCode {
     private String pCode;//垛码
     private Long timestamp;
     private Long uid;//用户id
+    private String operationType;//PALLET BOX WITHDRAW 默认为PALLET
 
     public Long getId() {
         return id;
@@ -57,5 +58,13 @@ public class RelateCode {
 
     public void setUid(Long uid) {
         this.uid = uid;
+    }
+
+    public String getOperationType() {
+        return operationType;
+    }
+
+    public void setOperationType(String operationType) {
+        this.operationType = operationType;
     }
 }
